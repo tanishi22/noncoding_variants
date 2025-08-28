@@ -10,7 +10,7 @@ bigBedtoBed mane.bb mane.bed
 
 # Trim and sort data 
 bedtools sort -i 5utr_variants.bed > 5utr_variants.sorted.bed 
-cut -f1-4,10,13,16 cCREs_hg38.bed > cCREs_hg38_trimmed.bed #retaining variant coordinates (1-3), cCRE ID (7), ENCODE label/classification (13), and UCSC label (16)
+cut -f1-4,10,13,16 cCREs_hg38.bed > cCREs_hg38_trimmed.bed #retaining variant coordinates (1-3), cCRE ID (10), ENCODE label/classification (13), and UCSC label (16)
 cut -f1-4 TSS_peaks_hg38.bed > TSS_peaks_trimmed.bed 
 cut -f1-4,7,8,18-20 mane.bed > mane_trimmed.bed
 
