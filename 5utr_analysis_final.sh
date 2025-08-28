@@ -10,16 +10,13 @@ bigBedtoBed mane.bb mane.bed
 
 # Trim and sort data 
 bedtools sort -i 5utr_variants.bed > 5utr_variants.sorted.bed 
+cut -f1-4,10,13,16 cCREs_hg38.bed > cCREs_hg38_trimmed.bed #retaining variant coordinates (1-3), cCRE ID (7), ENCODE label/classification (13), and UCSC label (16)
 cut -f1-4 TSS_peaks_hg38.bed > TSS_peaks_trimmed.bed 
 cut -f1-4,7,8,18-20 mane.bed > mane_trimmed.bed
 
-# ---- Annotate 5'UTR variants with cCREs 
-# check column layout and cut irrelevant fields. retaining variant coordinates (1-3), cCRE ID (7), ENCODE label/classification (13), and UCSC label (16)
-bedtools intersect -a 5utr_variants.bed -b cCREs_hg38.bed -wo > 5utr_cCRE_overlap.bed
-cut -f1-3,7,13,16,19-21 5utr_cCRE_overlap.bed > 5utr_cCRE_trimmed.bed 
-
-# Collapse overlapping cCREs. Grouping on variant (1-3), collapse cCRE annotations
-bedtools groupby -i 5utr_cCRE_trimmed.bed -g 1,2,3 -c 4,5,6 -o collapse,collapse,collapse > 5utr_cCRE_annotated.bed
+# ---- Annotate 5'UTR variants with cCREs and collapse overlapping cCREs (grouping on variant (1-3))
+bedtools intersect -a 5utr_variants.bed -b cCREs_hg38_trimmed.bed -wo > 5utr_cCRE_overlap.bed
+bedtools groupby -i 5utr_cCRE_overlap.bed -g 1,2,3 -c 4,5,6 -o collapse,collapse,collapse > 5utr_cCRE_annotated.bed # recheck columns for collapse
 
 # ----- TSS Annotation (direct overlap) - Does this variant directly disrupt a TSS peak?
 # Annotate 5'UTR variants with trimmed FANTOM5 TSS peaks and collapse per-variant
